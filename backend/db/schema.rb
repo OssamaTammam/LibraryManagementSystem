@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_19_175541) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_19_181212) do
   create_table "books", force: :cascade do |t|
     t.string "title", null: false
     t.string "author", null: false
