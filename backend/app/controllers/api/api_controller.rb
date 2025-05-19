@@ -12,41 +12,9 @@ class Api::ApiController < ApplicationController
   # Authenticate user
   def authenticate_request!
     jwt_token = cookies.signed[:jwt]
-    refresh_token = cookies.signed[:refresh_token]
-    return render_error("Unauthorized", :unauthorized) unless refresh_token
-
     decoded_jwt = JsonWebToken.decode(jwt_token) if jwt_token
-    return refresh_session(refresh_token) if decoded_jwt.nil?
-
-    @current_user ||= Rails.cache.fetch("user_#{decoded_jwt[:user_id]}") do
-      User.find_by!(id: decoded_jwt[:user_id])
-    end
-
+    @current_user = User.find_by!(id: decoded_jwt[:user_id])
     render_error("Unauthorized", :unauthorized) unless @current_user
-  end
-
-  # Refresh session
-  def refresh_session(refresh_token)
-    return render_error("Unauthorized", :unauthorized) if refresh_token.nil?
-
-    result = RefreshToken.refresh(refresh_token)
-    return render_error("Unauthorized", :unauthorized) unless result
-
-    cookies.signed[:jwt] = {
-      value: result[:new_jwt],
-      httponly: true,
-      secure: Rails.env.production?,
-      same_site: :strict
-    }
-
-    cookies.signed[:refresh_token] = {
-      value: result[:new_refresh_token],
-      httponly: true,
-      secure: Rails.env.production?,
-      same_site: :strict
-    }
-
-    @current_user = result[:user]
   end
 
   # List and filter records
