@@ -3,8 +3,8 @@ class Book < ApplicationRecord
 
   has_many :transactions, dependent: :restrict_with_exception
 
-  validates :title, presence: true, uniqueness: { case_sensitive: false }
-  validates :author, presence: true, uniqueness: { case_sensitive: false }
+  validates :title, presence: true
+  validates :author, presence: true
   validates :isbn, presence: true, format: ISBN_REGEX
   validates :quantity, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :buy_price, presence: true, numericality: { greater_than_or_equal_to: 0 }
