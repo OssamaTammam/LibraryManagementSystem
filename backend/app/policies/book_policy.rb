@@ -18,4 +18,16 @@ class BookPolicy < ApplicationPolicy
   def destroy?
     user.admin?
   end
+
+  def borrow?
+    user.admin?
+  end
+
+  def buy?
+    user.admin?
+  end
+
+  def return?
+    user.admin?
+  end
 end
