@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
   api_path = Rails.env.development? || Rails.env.test? ? "api" : ""
   namespace(:api, path: api_path) do
-    draw(:auth)
-    draw(:books)
-    draw(:users)
-    draw(:transactions)
+    # draw(:auth)
+    # draw(:books)
+    # draw(:users)
+    # draw(:transactions)
   end
 end

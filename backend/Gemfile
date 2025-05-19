@@ -22,7 +22,7 @@ gem "bootsnap", require: false
 gem "thruster", require: false
 
 group :development, :test do
-   gem "brakeman", require: false
+  gem "brakeman", require: false
   gem "byebug"
   gem "database_cleaner"
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
