@@ -30,7 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_19_181212) do
     t.decimal "price", null: false
     t.integer "transaction_type", null: false
     t.datetime "transaction_date", null: false
-    t.datetime "return_date", null: false
+    t.datetime "return_date"
   end
 
   create_table "users", force: :cascade do |t|

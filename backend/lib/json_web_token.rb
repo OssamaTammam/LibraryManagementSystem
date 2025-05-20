@@ -18,6 +18,6 @@ class JsonWebToken
     # rescue from all decode errors
   rescue JWT::DecodeError => _e
     # raise custom error to be handled by custom handler
-    raise(ErrorHandler::AuthenticationError, I18n.t("authentication.suspicious_token"))
+    raise(ErrorHandler::AuthenticationError, "Invalid Token")
   end
 end

@@ -13,5 +13,4 @@ class Transaction < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :transaction_type, presence: true, inclusion: { in: transaction_types.keys }
   validates :transaction_date, presence: true
-  validates :return_date, presence: true
 end

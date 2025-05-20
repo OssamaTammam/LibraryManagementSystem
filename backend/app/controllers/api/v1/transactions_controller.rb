@@ -1,4 +1,4 @@
-class Api::V1::TransactionsController < Api::ApplicationController
+class Api::V1::TransactionsController < Api::ApiController
   def index
     authorize Transaction, :index?
     transactions = list(Transaction)
@@ -7,7 +7,7 @@ class Api::V1::TransactionsController < Api::ApplicationController
 
   def show
     authorize Transaction, :show?
-    transaction = Transaction.find!(params[:id])
+    transaction = Transaction.find(params[:id])
     render_success({ transaction: serializer(transaction) })
   end
 end

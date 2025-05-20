@@ -18,7 +18,6 @@ RSpec.describe Transaction, type: :model do
 
     it { should validate_presence_of(:transaction_type) }
     it { should validate_presence_of(:transaction_date) }
-    it { should validate_presence_of(:return_date) }
 
     it { should define_enum_for(:transaction_type).with_values(buy: 0, borrow: 1, return: 2) }
   end

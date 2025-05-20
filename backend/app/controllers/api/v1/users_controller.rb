@@ -1,4 +1,4 @@
-class Api::V1::UsersController < Api::ApplicationController
+class Api::V1::UsersController < Api::ApiController
   def me
     authorize @current_user, :me?
     render_success({ user: serializer(@current_user) })
@@ -24,20 +24,20 @@ class Api::V1::UsersController < Api::ApplicationController
 
   def show
     authorize User, :show?
-    user = User.find!(params[:id])
+    user = User.find(params[:id])
     render_success({ user: serializer(user) })
   end
 
   def destroy
     authorize User, :destroy?
-    user = User.find!(params[:id])
+    user = User.find(params[:id])
     user.destroy!
     render_success({ message: "User deleted successfully" }, :no_content)
   end
 
   def update
     authorize User, :update?
-    user = User.find!(params[:id])
+    user = User.find(params[:id])
     user.update!(user_params)
     render_success({ user: serializer(user) })
   end

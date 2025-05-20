@@ -1,5 +1,5 @@
-class Api::V1::AuthController < Api::ApplicationController
-  skip_before_action :authenticate_request!, only: [ :login, :logout ]
+class Api::V1::AuthController < Api::ApiController
+  skip_before_action :authenticate_request!, only: [ :login, :signup ]
 
   def signup
     user = User.create!(signup_params)
@@ -8,7 +8,7 @@ class Api::V1::AuthController < Api::ApplicationController
 
   def login
     user = User.find_by!(email: login_params[:email])
-    if user.authenticate&(login_params[:password])
+    if user.authenticate(login_params[:password])
       jwt = JsonWebToken.encode(user_id: user.id)
       cookies.signed[:jwt] = {
         value: jwt,
@@ -18,7 +18,7 @@ class Api::V1::AuthController < Api::ApplicationController
       }
       render_success({ message: "Sign in successful" })
     else
-      render_error({ message: "Invalid email or password" }, :unauthorized)
+      render_error("Invalid email or password", :unauthorized)
     end
   end
 

@@ -1,4 +1,4 @@
-class Api::V1::BooksController < Api::ApplicationController
+class Api::V1::BooksController < Api::ApiController
   def index
     authorize Book, :index?
     books = list(Book)
@@ -7,7 +7,7 @@ class Api::V1::BooksController < Api::ApplicationController
 
   def show
     authorize Book, :show?
-    book = Book.find!(params[:id])
+    book = Book.find(params[:id])
     render_success({ book: serializer(book) })
   end
 
@@ -19,49 +19,49 @@ class Api::V1::BooksController < Api::ApplicationController
 
   def update
     authorize Book, :update?
-    book = Book.find!(params[:id])
+    book = Book.find(params[:id])
     book.update!(book_params)
     render_success({ book: serializer(book) })
   end
 
   def destroy
     authorize Book, :destroy?
-    book = Book.find!(params[:id])
+    book = Book.find(params[:id])
     book.destroy!
     render_success({ message: "Book deleted successfully" }, :no_content)
   end
 
   def borrow
     authorize Book, :borrow?
-    book = Book.find!(params[:book_id])
-    user = User.find!(params[:user_id])
-    if book.quantity < 0
-      render_error({ message: "Book not available" }, :unprocessable_entity)
+    book = Book.find(params[:book_id])
+    user = User.find(params[:user_id])
+    if book.quantity <= 0
+      return render_error("Book not available", :unprocessable_entity)
     end
-    transaction = Transaction.create!(user: user, book: book, transaction_type: :borrow, price: book.borrow_price * params[:days], transaction_date: Time.current, return_date: Time.current + params[:days].days)
+    transaction = Transaction.create!(user: user, book: book, transaction_type: :borrow, price: book.borrow_price * params[:days].to_i, transaction_date: Time.current, return_date: Time.current + params[:days].to_i.days)
     book.update!(quantity: book.quantity - 1)
-    render_success({ transaction: serializer(transaction) })
+    render_success({ transaction: TransactionSerializer.render(transaction) })
   end
 
   def buy
     authorize Book, :buy?
-    book = Book.find!(params[:book_id])
-    user = User.find!(params[:user_id])
+    book = Book.find(params[:book_id])
+    user = User.find(params[:user_id])
     transaction = Transaction.create!(user: user, book: book, transaction_type: :buy, price: book.buy_price, transaction_date: Time.current)
     book.update!(quantity: book.quantity - 1)
-    render_success({ transaction: serializer(transaction) })
+    render_success({ transaction: TransactionSerializer.render(transaction) })
   end
 
   def return
     authorize Book, :return?
-    book = Book.find!(params[:book_id])
-    transaction = Transaction.find!(params[:transaction_id])
+    book = Book.find(params[:book_id])
+    transaction = Transaction.find(params[:transaction_id])
     if transaction.return_date < Time.current
-      render_error({ message: "Book already returned" }, :unprocessable_entity)
+      return render_error("Book already returned", :unprocessable_entity)
     end
     transaction.update!(return_date: Time.current)
     book.update!(quantity: book.quantity + 1)
-    render_success({ transaction: serializer(transaction) })
+    render_success({ transaction: TransactionSerializer.render(transaction) })
   end
 
   private
