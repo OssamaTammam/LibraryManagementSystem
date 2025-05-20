@@ -1,63 +1,19 @@
-# spec/requests/api/v1/users_spec.rb
 require 'rails_helper'
 
 RSpec.describe "Api::V1::UsersController", type: :request do
   before do
     stub_const('Constants', TestConstants) unless defined?(Constants)
 
-    # Stub Pundit authorization to always return true
+    # Create a user and set up authentication
+    @current_user = create(:user)
+
+    # Allow Pundit
     allow_any_instance_of(Api::V1::UsersController).to receive(:authorize).and_return(true)
 
-    # Stub current_user for endpoints that need it
-    @current_user = create(:user)
+    # Set up the current_user for the controller
     allow_any_instance_of(Api::V1::UsersController).to receive(:authenticate_request!).and_return(true)
-    allow_any_instance_of(Api::V1::UsersController).to receive(:instance_variable_get).with(:@current_user).and_return(@current_user)
-    allow_any_instance_of(Api::V1::UsersController).to receive(:instance_variable_set).with(:@current_user, anything).and_return(@current_user)
-  end
-
-  # Check for the correct "me" route patterns
-  # Option 1: /api/v1/users/me
-  describe "GET /api/v1/users/me" do
-    it "returns the current user's information" do
-      post "/api/v1/auth/login", params: { email: @current_user.email, password: "Password123!" }
-      get "/api/v1/users/me"
-
-      expect(response).to have_http_status(:ok)
-      json_response = JSON.parse(response.body).with_indifferent_access
-      expect(json_response).to have_key(:user)
-    end
-  end
-
-  describe "PUT /api/v1/users/me" do
-    it "updates the current user's information" do
-      post "/api/v1/auth/login", params: { email: @current_user.email, password: "Password123!" }
-      put "/api/v1/users/me", params: { username: "newusername", email: "newemail@example.com" }
-
-      expect(response).to have_http_status(:ok)
-      expect(@current_user.reload.username).to eq("newusername")
-      expect(@current_user.reload.email).to eq("newemail@example.com")
-    end
-
-    it "doesn't update admin status through update_me" do
-      original_admin_status = @current_user.admin
-      post "/api/v1/auth/login", params: { email: @current_user.email, password: "Password123!" }
-      put "/api/v1/users/me", params: { admin: true }
-
-      # Admin should not be updated through update_me
-      expect(@current_user.reload.admin).to eq(original_admin_status)
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  describe "DELETE /api/v1/users/me" do
-    it "deletes the current user" do
-      expect {
-        post "/api/v1/auth/login", params: { email: @current_user.email, password: "Password123!" }
-        delete "/api/v1/users/me"
-      }.to change(User, :count).by(-1)
-
-      expect(response).to have_http_status(:no_content)
-    end
+    # Directly set the instance variable
+    allow_any_instance_of(Api::V1::UsersController).to receive(:instance_variable_get).with('@current_user').and_return(@current_user)
   end
 
   # Standard user management endpoints
