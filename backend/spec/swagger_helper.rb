@@ -15,25 +15,25 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a openapi_spec tag to the
   # the root example_group in your specs, e.g. describe '...', openapi_spec: 'v2/swagger.json'
   config.openapi_specs = {
-    'v1/swagger.yaml' => {
-      openapi: '3.0.1',
-      info: {
-        title: 'API V1',
-        version: 'v1'
-      },
-      paths: {},
-      servers: [
-        {
-          url: 'https://{defaultHost}',
-          variables: {
-            defaultHost: {
-              default: 'www.example.com'
-            }
-          }
+  'v1/swagger.yaml' => {
+    openapi: '3.0.1',
+    info: {
+      title: 'API V1',
+      version: 'v1'
+    },
+    components: {
+      securitySchemes: {
+        cookie_auth: {
+          type: :apiKey,
+          in: :cookie,
+          name: 'jwt'
         }
-      ]
-    }
+      }
+    },
+    security: [ { cookie_auth: [] } ],
+    paths: {}
   }
+}
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
   # The openapi_specs configuration option has the filename including format in

@@ -1,0 +1,560 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    cookie_auth:
+      type: apiKey
+      in: cookie
+      name: jwt
+security:
+- cookie_auth: []
+paths:
+  "/api/v1/auth/signup":
+    post:
+      summary: Registers a new user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+              - username
+              - email
+              - password
+              - password_confirmation
+  "/api/v1/auth/login":
+    post:
+      summary: Logs in a user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: login successful
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/api/v1/books":
+    get:
+      summary: Lists all books
+      tags:
+      - Books
+      responses:
+        '200':
+          description: books found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  books:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        author:
+                          type: string
+                        isbn:
+                          type: string
+                        quantity:
+                          type: integer
+                        buy_price:
+                          type: string
+                        borrow_price:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - title
+                      - author
+                      - isbn
+                      - quantity
+    post:
+      summary: Creates a book
+      tags:
+      - Books
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: book created
+        '422':
+          description: invalid request
+        '401':
+          description: unauthorized access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                quantity:
+                  type: integer
+                buy_price:
+                  type: number
+                  format: float
+                borrow_price:
+                  type: number
+                  format: float
+              required:
+              - title
+              - author
+              - isbn
+              - quantity
+  "/api/v1/books/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves a book
+      tags:
+      - Books
+      responses:
+        '200':
+          description: book found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  book:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      title:
+                        type: string
+                      author:
+                        type: string
+                      isbn:
+                        type: string
+                      quantity:
+                        type: integer
+                      buy_price:
+                        type: string
+                      borrow_price:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+        '404':
+          description: book not found
+    put:
+      summary: Updates a book
+      tags:
+      - Books
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: book updated
+        '404':
+          description: book not found
+        '401':
+          description: unauthorized access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                quantity:
+                  type: integer
+                buy_price:
+                  type: number
+                  format: float
+                borrow_price:
+                  type: number
+                  format: float
+    delete:
+      summary: Deletes a book
+      tags:
+      - Books
+      security:
+      - cookie_auth: []
+      responses:
+        '204':
+          description: book deleted
+        '404':
+          description: book not found
+        '401':
+          description: unauthorized access
+  "/api/v1/books/borrow":
+    post:
+      summary: Borrows a book
+      tags:
+      - Book Transactions
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: book borrowed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  transaction:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      book_id:
+                        type: integer
+                      transaction_type:
+                        type: string
+                      transaction_date:
+                        type: string
+                        format: date-time
+                      return_date:
+                        type: string
+                        format: date-time
+                      price:
+                        type: string
+                      user:
+                        type: object
+                      book:
+                        type: object
+        '422':
+          description: book not available
+        '401':
+          description: unauthorized access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                user_id:
+                  type: integer
+                days:
+                  type: integer
+              required:
+              - book_id
+              - user_id
+              - days
+  "/api/v1/books/buy":
+    post:
+      summary: Purchases a book
+      tags:
+      - Book Transactions
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: book purchased successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  transaction:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      book_id:
+                        type: integer
+                      transaction_type:
+                        type: string
+                      transaction_date:
+                        type: string
+                        format: date-time
+                      return_date:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                        nullable: true
+                      price:
+                        type: string
+                      user:
+                        type: object
+                      book:
+                        type: object
+        '404':
+          description: book not found
+        '401':
+          description: unauthorized access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+              - book_id
+              - user_id
+  "/api/v1/books/return":
+    post:
+      summary: Returns a borrowed book
+      tags:
+      - Book Transactions
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: book returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  transaction:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      book_id:
+                        type: integer
+                      transaction_type:
+                        type: string
+                      transaction_date:
+                        type: string
+                        format: date-time
+                      return_date:
+                        type: string
+                        format: date-time
+                      price:
+                        type: string
+                      user:
+                        type: object
+                      book:
+                        type: object
+        '422':
+          description: book already returned
+        '401':
+          description: unauthorized access
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                transaction_id:
+                  type: integer
+              required:
+              - book_id
+              - transaction_id
+  "/api/v1/transactions":
+    get:
+      summary: List all transactions (admin only)
+      tags:
+      - Transactions
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: transactions listed
+  "/api/v1/transactions/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Get a specific transaction (admin only)
+      tags:
+      - Transactions
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: transaction found
+        '404':
+          description: transaction not found
+  "/api/v1/users/me":
+    get:
+      summary: Get current user
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: current user found
+        '401':
+          description: unauthorized
+    put:
+      summary: Update current user
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: user updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+              - username
+    delete:
+      summary: Delete current user
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      responses:
+        '204':
+          description: user deleted
+  "/api/v1/users":
+    get:
+      summary: List all users (admin only)
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: list of users
+  "/api/v1/users/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Get specific user (admin only)
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      responses:
+        '200':
+          description: user found
+        '404':
+          description: user not found
+    put:
+      summary: Update specific user (admin only)
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: user updated
+        '404':
+          description: user not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                admin:
+                  type: boolean
+    delete:
+      summary: Delete specific user (admin only)
+      tags:
+      - Users
+      security:
+      - cookie_auth: []
+      responses:
+        '204':
+          description: user deleted
+        '404':
+          description: user not found
