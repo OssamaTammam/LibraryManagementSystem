@@ -1,4 +1,4 @@
-class TransactionsPolicy < ApplicationPolicy
+class TransactionPolicy < ApplicationPolicy
   def index?
     user.admin?
   end

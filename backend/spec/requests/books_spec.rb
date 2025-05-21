@@ -2,17 +2,6 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::BooksController", type: :request do
-  # Make TestConstants available if needed
-  before do
-    stub_const('Constants', TestConstants) unless defined?(Constants)
-
-    # Stub Pundit authorization (if needed in request specs)
-    allow_any_instance_of(Api::V1::BooksController).to receive(:authorize).and_return(true)
-
-    # If you need to bypass authentication
-    allow_any_instance_of(Api::ApiController).to receive(:authenticate_request!).and_return(true)
-  end
-
   describe 'GET /api/v1/books' do
     let!(:books) { create_list(:book, 3) }
 
@@ -46,13 +35,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
 
   describe 'POST /api/v1/books' do
     let(:valid_params) do
-      {
-        title: 'Test Book',
-        author: 'Test Author',
-        isbn: '1234567890123', # 13 digits as per regex
-        quantity: 5,
-        buy_price: 29.99,
-        borrow_price: 5.99
+      TestConstants::DEFAULT_BOOK_PARAMS
+    end
+
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
       }
     end
 
@@ -81,6 +71,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
   describe 'PUT /api/v1/books/:id' do
     let!(:book) { create(:book, title: 'Old Title') }
 
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
+      }
+    end
+
     it 'updates an existing book' do
       put "/api/v1/books/#{book.id}", params: { title: 'New Title' }
 
@@ -101,6 +99,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
   describe 'DELETE /api/v1/books/:id' do
     let!(:book) { create(:book) }
 
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
+      }
+    end
+
     it 'deletes the book' do
       expect {
         delete "/api/v1/books/#{book.id}"
@@ -118,6 +124,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
   describe 'POST /api/v1/books/borrow' do
     let!(:book) { create(:book, quantity: 2, borrow_price: 5.0) }
     let!(:user) { create(:user) }
+
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
+      }
+    end
 
     it 'creates a borrow transaction' do
       expect {
@@ -146,6 +160,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
   describe 'POST /api/v1/books/buy' do
     let!(:book) { create(:book, quantity: 2, buy_price: 15.0) }
     let!(:user) { create(:user) }
+
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
+      }
+    end
 
     it 'creates a buy transaction' do
       expect {
@@ -177,6 +199,14 @@ RSpec.describe "Api::V1::BooksController", type: :request do
              price: 35.0, # Add price to fix validation
              transaction_date: 5.days.ago,
              return_date: 2.days.from_now)
+    end
+
+    before do
+      admin = create(:user, admin: true)
+      post '/api/v1/auth/login', params: {
+        email: admin.email,
+        password: TestConstants::DEFAULT_USER_PARAMS[:password]
+      }
     end
 
     it 'updates the transaction and book when returning' do

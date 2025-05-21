@@ -1,4 +1,6 @@
 class Api::V1::BooksController < Api::ApiController
+  skip_before_action :authenticate_request!, only: [ :index, :show ]
+
   def index
     authorize Book, :index?
     books = list(Book)

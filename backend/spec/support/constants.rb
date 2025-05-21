@@ -10,5 +10,14 @@ module TestConstants
     email: 'testuser@email.com',
     password: 'Password123!',
     password_confirmation: 'Password123!'
-}.freeze
+  }.freeze
+
+  DEFAULT_BOOK_PARAMS = {
+        title: 'Test Book',
+        author: 'Test Author',
+        isbn: '1234567890123',
+        quantity: 5,
+        buy_price: 29.99,
+        borrow_price: 5.99
+  }.freeze
 end
