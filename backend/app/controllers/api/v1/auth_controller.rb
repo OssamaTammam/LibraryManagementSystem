@@ -7,10 +7,10 @@ class Api::V1::AuthController < Api::ApiController
   end
 
   def login
-    user = User.find_by!(email: login_params[:email])
-    if user.authenticate(login_params[:password])
+    user = User.find_by(email: login_params[:email])
+    if user&.authenticate(login_params[:password])
       jwt = JsonWebToken.encode(user_id: user.id)
-      cookies.signed[:jwt] = {
+      cookies.encrypted[:jwt] = {
         value: jwt,
         httponly: true,
         same_site: :strict,

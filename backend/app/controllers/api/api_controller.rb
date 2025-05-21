@@ -11,9 +11,11 @@ class Api::ApiController < ApplicationController
 
   # Authenticate user
   def authenticate_request!
-    jwt_token = cookies.signed[:jwt]
-    decoded_jwt = JsonWebToken.decode(jwt_token) if jwt_token
-    @current_user = User.find_by!(id: decoded_jwt[:user_id])
+    jwt_token = cookies.encrypted[:jwt]
+    if jwt_token
+      decoded_jwt = JsonWebToken.decode(jwt_token) if jwt_token
+      @current_user = User.find_by(id: decoded_jwt[:user_id])
+    end
     render_error("Unauthorized", :unauthorized) unless @current_user
   end
 
