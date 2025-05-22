@@ -10,18 +10,18 @@ components:
       in: cookie
       name: jwt
 security:
-- cookie_auth: []
+  - cookie_auth: []
 paths:
   "/api/v1/auth/signup":
     post:
       summary: Registers a new user
       tags:
-      - Authentication
+        - Authentication
       parameters: []
       responses:
-        '201':
+        "201":
           description: user created
-        '422':
+        "422":
           description: validation errors
       requestBody:
         content:
@@ -39,20 +39,20 @@ paths:
                 password_confirmation:
                   type: string
               required:
-              - username
-              - email
-              - password
-              - password_confirmation
+                - username
+                - email
+                - password
+                - password_confirmation
   "/api/v1/auth/login":
     post:
       summary: Logs in a user
       tags:
-      - Authentication
+        - Authentication
       parameters: []
       responses:
-        '200':
+        "200":
           description: login successful
-        '401':
+        "401":
           description: unauthorized
       requestBody:
         content:
@@ -66,15 +66,15 @@ paths:
                 password:
                   type: string
               required:
-              - email
-              - password
+                - email
+                - password
   "/api/v1/books":
     get:
       summary: Lists all books
       tags:
-      - Books
+        - Books
       responses:
-        '200':
+        "200":
           description: books found
           content:
             application/json:
@@ -109,24 +109,24 @@ paths:
                           type: string
                           format: date-time
                       required:
-                      - id
-                      - title
-                      - author
-                      - isbn
-                      - quantity
+                        - id
+                        - title
+                        - author
+                        - isbn
+                        - quantity
     post:
       summary: Creates a book
       tags:
-      - Books
+        - Books
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '201':
+        "201":
           description: book created
-        '422':
+        "422":
           description: invalid request
-        '401':
+        "401":
           description: unauthorized access
       requestBody:
         content:
@@ -149,23 +149,23 @@ paths:
                   type: number
                   format: float
               required:
-              - title
-              - author
-              - isbn
-              - quantity
+                - title
+                - author
+                - isbn
+                - quantity
   "/api/v1/books/{id}":
     parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
     get:
       summary: Retrieves a book
       tags:
-      - Books
+        - Books
       responses:
-        '200':
+        "200":
           description: book found
           content:
             application/json:
@@ -197,21 +197,21 @@ paths:
                       updated_at:
                         type: string
                         format: date-time
-        '404':
+        "404":
           description: book not found
     put:
       summary: Updates a book
       tags:
-      - Books
+        - Books
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: book updated
-        '404':
+        "404":
           description: book not found
-        '401':
+        "401":
           description: unauthorized access
       requestBody:
         content:
@@ -236,26 +236,26 @@ paths:
     delete:
       summary: Deletes a book
       tags:
-      - Books
+        - Books
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '204':
+        "204":
           description: book deleted
-        '404':
+        "404":
           description: book not found
-        '401':
+        "401":
           description: unauthorized access
   "/api/v1/books/borrow":
     post:
       summary: Borrows a book
       tags:
-      - Book Transactions
+        - Book Transactions
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: book borrowed successfully
           content:
             application/json:
@@ -287,9 +287,9 @@ paths:
                         type: object
                       book:
                         type: object
-        '422':
+        "422":
           description: book not available
-        '401':
+        "401":
           description: unauthorized access
       requestBody:
         content:
@@ -302,19 +302,19 @@ paths:
                 days:
                   type: integer
               required:
-              - book_id
-              - user_id
-              - days
+                - book_id
+                - user_id
+                - days
   "/api/v1/books/buy":
     post:
       summary: Purchases a book
       tags:
-      - Book Transactions
+        - Book Transactions
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: book purchased successfully
           content:
             application/json:
@@ -339,8 +339,8 @@ paths:
                         format: date-time
                       return_date:
                         type:
-                        - string
-                        - 'null'
+                          - string
+                          - "null"
                         format: date-time
                         nullable: true
                       price:
@@ -349,9 +349,9 @@ paths:
                         type: object
                       book:
                         type: object
-        '404':
+        "404":
           description: book not found
-        '401':
+        "401":
           description: unauthorized access
       requestBody:
         content:
@@ -362,18 +362,18 @@ paths:
                 book_id:
                   type: integer
               required:
-              - book_id
-              - user_id
+                - book_id
+                - user_id
   "/api/v1/books/return":
     post:
       summary: Returns a borrowed book
       tags:
-      - Book Transactions
+        - Book Transactions
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: book returned successfully
           content:
             application/json:
@@ -405,9 +405,9 @@ paths:
                         type: object
                       book:
                         type: object
-        '422':
+        "422":
           description: book already returned
-        '401':
+        "401":
           description: unauthorized access
       requestBody:
         content:
@@ -420,57 +420,57 @@ paths:
                 transaction_id:
                   type: integer
               required:
-              - book_id
-              - transaction_id
+                - book_id
+                - transaction_id
   "/api/v1/transactions":
     get:
       summary: List all transactions (admin only)
       tags:
-      - Transactions
+        - Transactions
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '200':
+        "200":
           description: transactions listed
   "/api/v1/transactions/{id}":
     parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       summary: Get a specific transaction (admin only)
       tags:
-      - Transactions
+        - Transactions
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '200':
+        "200":
           description: transaction found
-        '404':
+        "404":
           description: transaction not found
   "/api/v1/users/me":
     get:
       summary: Get current user
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '200':
+        "200":
           description: current user found
-        '401':
+        "401":
           description: unauthorized
     put:
       summary: Update current user
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: user updated
       requestBody:
         content:
@@ -481,55 +481,55 @@ paths:
                 username:
                   type: string
               required:
-              - username
+                - username
     delete:
       summary: Delete current user
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '204':
+        "204":
           description: user deleted
   "/api/v1/users":
     get:
       summary: List all users (admin only)
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '200':
+        "200":
           description: list of users
   "/api/v1/users/{id}":
     parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       summary: Get specific user (admin only)
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '200':
+        "200":
           description: user found
-        '404':
+        "404":
           description: user not found
     put:
       summary: Update specific user (admin only)
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       parameters: []
       responses:
-        '200':
+        "200":
           description: user updated
-        '404':
+        "404":
           description: user not found
       requestBody:
         content:
@@ -546,11 +546,11 @@ paths:
     delete:
       summary: Delete specific user (admin only)
       tags:
-      - Users
+        - Users
       security:
-      - cookie_auth: []
+        - cookie_auth: []
       responses:
-        '204':
+        "204":
           description: user deleted
-        '404':
+        "404":
           description: user not found
