@@ -26,6 +26,8 @@ function BookCard({ book }) {
 }
 
 export default function Home() {
+  // is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [books, setBooks] = useState([
     {
       id: 1,
@@ -36,6 +38,17 @@ export default function Home() {
       coverUrl: imageCover,
     },
   ]);
+  // check for coockies
+  const checkCookies = () => {
+    // Check if cookies are set
+    const cookies = document.cookie.split("; ");
+    const isLoggedInCookie = cookies.find((cookie) =>
+      cookie.startsWith("jwt=")
+    );
+    if (isLoggedInCookie) {
+      setIsLoggedIn(true);
+    }
+  };
 
   return (
     <main
