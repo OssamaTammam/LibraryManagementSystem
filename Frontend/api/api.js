@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL, // from .env file
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000, // optional
   withCredentials: true, // optional
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 

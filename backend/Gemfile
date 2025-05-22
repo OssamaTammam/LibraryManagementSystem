@@ -10,6 +10,7 @@ gem "pg", "~> 1.1"
 gem "pundit", "~> 2.5"
 gem "sorbet", "~> 0.5.11708"
 gem "jwt", "~> 2.10", ">= 2.10.1"
+gem 'rack-cors'
 
 gem "rswag-api"
 gem "rswag-ui"

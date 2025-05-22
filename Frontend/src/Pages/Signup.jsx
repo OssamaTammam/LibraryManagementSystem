@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { signup } from "../../api/auth";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
@@ -6,17 +7,24 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    if (!agreeTerms) {
-      alert("You must agree to the terms and conditions.");
-      return;
+    const signupData = {
+      username,
+      email,
+      password,
+      password_confirmation: confirmPassword,
+    };
+    try {
+      const response = await signup(signupData);
+      console.log(response);
+    } catch (error) {
+      
     }
-    alert(`Account created for ${username} (${email})`);
   };
 
   return (
