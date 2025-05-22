@@ -1,12 +1,19 @@
 import { useState } from "react";
+import { login } from "../../api/auth";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Welcome, ${username}!`);
+  const handleSubmit = async (e) => {
+    const result = await login(email, password);
+    if (result == 200) {
+      // Handle successful login
+      console.log("Login successful");
+    } else {
+      // Handle login error
+      console.error("Login failed");
+    }
   };
 
   return (
@@ -59,10 +66,10 @@ export default function Login() {
             </a>
           </div>
 
-          <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+          <button
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors"
             onClick={handleSubmit}
-            >
-
+          >
             Sign In
           </button>
         </form>
