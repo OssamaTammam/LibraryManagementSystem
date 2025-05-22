@@ -36,11 +36,10 @@ class Api::V1::BooksController < Api::ApiController
   def borrow
     authorize Book, :borrow?
     book = Book.find(params[:book_id])
-    user = User.find(params[:user_id])
     if book.quantity <= 0
       return render_error("Book not available", :unprocessable_entity)
     end
-    transaction = Transaction.create!(user: user, book: book, transaction_type: :borrow, price: book.borrow_price * params[:days].to_i, transaction_date: Time.current, return_date: Time.current + params[:days].to_i.days)
+    transaction = Transaction.create!(user: @current_user, book: book, transaction_type: :borrow, price: book.borrow_price * params[:days].to_i, transaction_date: Time.current, return_date: Time.current + params[:days].to_i.days)
     book.update!(quantity: book.quantity - 1)
     render_success({ transaction: TransactionSerializer.render(transaction) })
   end
@@ -48,8 +47,7 @@ class Api::V1::BooksController < Api::ApiController
   def buy
     authorize Book, :buy?
     book = Book.find(params[:book_id])
-    user = User.find(params[:user_id])
-    transaction = Transaction.create!(user: user, book: book, transaction_type: :buy, price: book.buy_price, transaction_date: Time.current)
+    transaction = Transaction.create!(user: @current_user, book: book, transaction_type: :buy, price: book.buy_price, transaction_date: Time.current)
     book.update!(quantity: book.quantity - 1)
     render_success({ transaction: TransactionSerializer.render(transaction) })
   end
@@ -69,6 +67,6 @@ class Api::V1::BooksController < Api::ApiController
   private
 
   def book_params
-    params.permit(:title, :author,  :isbn, :quantity, :buy_price, :borrow_price)
+    params.permit(:title, :author, :isbn, :quantity, :buy_price, :borrow_price)
   end
 end

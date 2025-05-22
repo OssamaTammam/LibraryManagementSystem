@@ -126,9 +126,8 @@ RSpec.describe "Api::V1::BooksController", type: :request do
     let!(:user) { create(:user) }
 
     before do
-      admin = create(:user, admin: true)
       post '/api/v1/auth/login', params: {
-        email: admin.email,
+        email: user.email,
         password: TestConstants::DEFAULT_USER_PARAMS[:password]
       }
     end
@@ -162,9 +161,8 @@ RSpec.describe "Api::V1::BooksController", type: :request do
     let!(:user) { create(:user) }
 
     before do
-      admin = create(:user, admin: true)
       post '/api/v1/auth/login', params: {
-        email: admin.email,
+        email: user.email,
         password: TestConstants::DEFAULT_USER_PARAMS[:password]
       }
     end
@@ -202,9 +200,8 @@ RSpec.describe "Api::V1::BooksController", type: :request do
     end
 
     before do
-      admin = create(:user, admin: true)
       post '/api/v1/auth/login', params: {
-        email: admin.email,
+        email: user.email,
         password: TestConstants::DEFAULT_USER_PARAMS[:password]
       }
     end

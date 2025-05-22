@@ -20,14 +20,14 @@ class BookPolicy < ApplicationPolicy
   end
 
   def borrow?
-    user.admin?
+    user.present?
   end
 
   def buy?
-    user.admin?
+    user.present?
   end
 
   def return?
-    user.admin?
+    user.present?
   end
 end

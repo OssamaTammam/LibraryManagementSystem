@@ -299,8 +299,6 @@ paths:
               properties:
                 book_id:
                   type: integer
-                user_id:
-                  type: integer
                 days:
                   type: integer
               required:
@@ -362,8 +360,6 @@ paths:
               type: object
               properties:
                 book_id:
-                  type: integer
-                user_id:
                   type: integer
               required:
               - book_id

@@ -252,7 +252,6 @@ RSpec.describe 'Books API', type: :request do
         type: :object,
         properties: {
           book_id: { type: :integer },
-          user_id: { type: :integer },
           days: { type: :integer }
         },
         required: [ 'book_id', 'user_id', 'days' ]
@@ -334,8 +333,7 @@ RSpec.describe 'Books API', type: :request do
       parameter name: :params, in: :body, schema: {
         type: :object,
         properties: {
-          book_id: { type: :integer },
-          user_id: { type: :integer }
+          book_id: { type: :integer }
         },
         required: [ 'book_id', 'user_id' ]
       }
