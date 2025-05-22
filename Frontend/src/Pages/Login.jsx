@@ -9,6 +9,12 @@ export default function Login() {
     e.preventDefault();
     const signinData = { email, password };
     const result = await login(signinData);
+    if (result.status === 200) {
+      alert("Login successful");
+      window.location.href = "/Home";
+    } else {
+      alert("Login failed");
+    }
   };
 
   return (

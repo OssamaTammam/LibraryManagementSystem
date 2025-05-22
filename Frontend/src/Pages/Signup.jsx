@@ -23,8 +23,10 @@ export default function SignUp() {
       const response = await signup(signupData);
       console.log(response);
     } catch (error) {
-      
+      console.error("Error during signup:", error);
+      alert("Signup failed. Please try again.");
     }
+    window.location.href = "/";
   };
 
   return (
