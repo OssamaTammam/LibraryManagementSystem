@@ -16,7 +16,10 @@ class Api::V1::AuthController < Api::ApiController
         same_site: :strict,
         secure: Rails.env.production?
       }
-      render_success({ message: "Sign in successful" })
+      render_success({ message: "Sign in successful", user:{
+        username: user.username,
+        admin: user.admin,
+      } },)
     else
       render_error("Invalid email or password", :unauthorized)
     end

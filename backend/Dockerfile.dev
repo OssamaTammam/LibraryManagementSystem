@@ -30,11 +30,12 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Set up supervisord to manage multiple processes
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+ARG JWT_SECRET
+ENV JWT_SECRET=${JWT_SECRET}
 
 # Expose port for Rails
 EXPOSE 80
