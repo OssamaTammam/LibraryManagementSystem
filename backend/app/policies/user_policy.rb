@@ -11,6 +11,14 @@ class UserPolicy < ApplicationPolicy
     user == record
   end
 
+  def get_borrowed_books?
+    user == record
+  end
+
+  def get_transactions?
+    user == record
+  end
+
   def index?
     user.admin?
   end

@@ -7,10 +7,6 @@ class BookPolicy < ApplicationPolicy
     true
   end
 
-  def get_borrowed_books?
-    user.present?
-  end
-
   def create?
     user.admin?
   end
