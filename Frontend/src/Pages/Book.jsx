@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import backgroundImage from "../../utils/backgroundHome.jpg";
+import { borrowBook } from "../../api/book";
+import { buyBook } from "../../api/books";
 import { getBookById } from "../../api/books";
 
 export default function BookPage() {
@@ -17,7 +19,23 @@ export default function BookPage() {
     fetchBook();
   }, [id]);
 
-  
+  const handleBorrow = async () => {
+    const days = prompt("Enter number of days to borrow:");
+    try {
+      const res = await borrowBook({ id, days });
+      alert("Book borrowed successfully!");
+    } catch (error) {
+      alert("Failed to borrow book.");
+    }
+  };
+  const handleBuy = async () => {
+    try {
+      const res = await buyBook({ id });
+      alert("Book bought successfully!");
+    } catch (error) {
+      alert("Failed to buy book.");
+    }
+  };
 
   return (
     <main
@@ -48,10 +66,16 @@ export default function BookPage() {
         <div className="md:w-1/2 w-full p-6 flex flex-col justify-between">
           <div className="flex-grow" />
           <div className="flex justify-end space-x-4">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+              onClick={handleBorrow}
+            >
               Borrow
             </button>
-            <button className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition">
+            <button
+              onClick={handleBuy}
+              className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+            >
               Buy
             </button>
           </div>

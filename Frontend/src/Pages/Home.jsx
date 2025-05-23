@@ -64,20 +64,23 @@ export default function Home() {
         {/* Auth or Profile */}
         <div className="space-x-4 flex items-center">
           {isLoggedIn ? (
-            <div className="flex items-center space-x-2">
+            <Link
+              to="/profile"
+              className="flex items-center space-x-2 hover:underline"
+            >
               <img
                 src="https://www.svgrepo.com/show/382106/profile-user.svg"
                 alt="Profile"
                 className="w-8 h-8 rounded-full"
               />
               <span className="text-gray-900 font-medium">
-                {localStorage.getItem.username}
+                {localStorage.getItem("username")}
               </span>
-            </div>
+            </Link>
           ) : (
             <>
               <Link
-                to="/login"
+                to="/"
                 className="text-gray-900 hover:underline font-medium"
               >
                 Login
