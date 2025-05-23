@@ -74,7 +74,7 @@ export const getMyTransactions = async () => {
 };
 export const getMyBorrowedBooks = async () => {
   try {
-    const response = await api.get("/users/me/transactions");
+    const response = await api.get("/users/me/borrowed_books");
     return response.data;
   } catch (error) {
     console.error("Error fetching borrowed books:", error);

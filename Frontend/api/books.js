@@ -73,7 +73,7 @@ export const buyBook = async (bookData) => {
 
 export const returnBook = async (bookData) => {
   try {
-    const response = await api.post("books/buy", {
+    const response = await api.post("books/return", {
       book_id: bookData.id,
       transaction_id: bookData.transaction_id,
     });

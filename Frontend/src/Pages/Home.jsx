@@ -80,7 +80,7 @@ export default function Home() {
           ) : (
             <>
               <Link
-                to="/"
+                to="/login"
                 className="text-gray-900 hover:underline font-medium"
               >
                 Login

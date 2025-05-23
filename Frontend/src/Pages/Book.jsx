@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import backgroundImage from "../../utils/backgroundHome.jpg";
-import { borrowBook } from "../../api/book";
+import { borrowBook } from "../../api/books";
 import { buyBook } from "../../api/books";
 import { getBookById } from "../../api/books";
 
@@ -23,6 +23,8 @@ export default function BookPage() {
     const days = prompt("Enter number of days to borrow:");
     try {
       const res = await borrowBook({ id, days });
+      book.quantity -= 1;
+      setBook({ ...book });
       alert("Book borrowed successfully!");
     } catch (error) {
       alert("Failed to borrow book.");
@@ -31,6 +33,8 @@ export default function BookPage() {
   const handleBuy = async () => {
     try {
       const res = await buyBook({ id });
+      book.quantity -= 1;
+      setBook({ ...book });
       alert("Book bought successfully!");
     } catch (error) {
       alert("Failed to buy book.");
