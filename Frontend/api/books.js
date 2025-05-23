@@ -45,3 +45,41 @@ export const deleteBook = async (id) => {
     throw error;
   }
 };
+
+export const borrowBook = async (bookData) => {
+  try {
+    const response = await api.post("books/borrow", {
+      book_id: bookData.id,
+      days: bookData.days,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error borrowing book:", error);
+    throw error;
+  }
+};
+
+export const buyBook = async (bookData) => {
+  try {
+    const response = await api.post("books/buy", {
+      book_id: bookData.id,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error buying book:", error);
+    throw error;
+  }
+};
+
+export const returnBook = async (bookData) => {
+  try {
+    const response = await api.post("books/buy", {
+      book_id: bookData.id,
+      transaction_id: bookData.transaction_id,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error returning book:", error);
+    throw error;
+  }
+};

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import backgroundImage from "../../utils/backgroundHome.jpg";
 import { getallBooks } from "../../api/books";
+import { getMe } from "../../api/users";
 
 function BookCard({ book }) {
   return (
@@ -36,14 +37,13 @@ export default function Home() {
       }
     };
     fetchBooks();
-    // checkCookies();
+    checkLoggedIn();
   }, []);
-  const checkCookies = () => {
-    const cookies = document.cookie.split("; ");
-    const isLoggedInCookie = cookies.find((cookie) =>
-      cookie.startsWith("jwt=")
-    );
-    if (isLoggedInCookie) {
+
+  const checkLoggedIn = async () => {
+    const user = (await getMe()).user;
+    const currUser = JSON.parse(localStorage.getItem("user"));
+    if (user.id === currUser.id) {
       setIsLoggedIn(true);
     }
   };
