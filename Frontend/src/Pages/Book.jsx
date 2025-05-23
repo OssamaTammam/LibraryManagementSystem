@@ -1,19 +1,21 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import imageCover from "../../utils/book.png";
 import backgroundImage from "../../utils/backgroundHome.jpg";
 
 export default function BookPage() {
   const { id } = useParams();
+  const [book, setBook] = useState(null);
 
-  const book = {
-    id,
-    title: "Harry Potter and the Cursed Child",
-    author: "J.K. Rowling, Jack Thorne, and John Tiffany",
-    description:
-      "Based on an original new story by J.K. Rowling, Jack Thorne, and John Tiffany, 'Harry Potter and the Cursed Child' is a stage play that follows Harry Potter’s son, Albus Severus Potter, as he grapples with the weight of a family legacy he never wanted. As past and present fuse ominously, father and son learn the uncomfortable truth: sometimes, darkness comes from unexpected places.",
-    coverUrl: imageCover,
-    genres: ["Fantasy", "Play", "Harry Potter", "Magic", "Adventure"],
-  };
+  useEffect(() => {
+    const fetchBook = async () => {
+      const response = await fetch(`http://localhost:8000/api/books/${id}`);
+      const data = await response.json();
+      setBook(data);
+    };
+
+    fetchBook();
+  }, [id]);
 
   return (
     <main
@@ -29,7 +31,7 @@ export default function BookPage() {
         {/* Left: Cover Image */}
         <div className="md:w-1/2 w-full h-80 md:h-auto">
           <img
-            src={book.coverUrl}
+            src={book.coverUrl || imageCover}
             alt={`${book.title} cover`}
             className="w-full h-full object-cover"
           />
@@ -46,7 +48,7 @@ export default function BookPage() {
           </p>
 
           <div className="flex flex-wrap gap-2">
-            {book.genres.map((genre, idx) => (
+            {book.genres?.map((genre, idx) => (
               <span
                 key={idx}
                 className="bg-blue-100 text-blue-800 px-3 py-1 text-sm rounded-full"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import imageCover from "../../utils/book.png";
 import backgroundImage from "../../utils/backgroundHome.jpg";
@@ -10,7 +10,7 @@ function BookCard({ book }) {
       className="bg-white rounded-lg shadow-md overflow-hidden flex max-w-[400px] h-[220px] hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
       <img
-        src={book.coverUrl}
+        src={book.coverUrl || imageCover}
         alt={book.title ? `${book.title} cover` : "Book cover"}
         className="w-36 object-cover"
       />
@@ -26,21 +26,27 @@ function BookCard({ book }) {
 }
 
 export default function Home() {
-  // is logged in
+  const [books, setBooks] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [books, setBooks] = useState([
-    {
-      id: 1,
-      title: "Placeholder Book",
-      author: "Author Name",
-      description:
-        "This is a placeholder book description that can be multiline and needs to be clamped.",
-      coverUrl: imageCover,
-    },
-  ]);
-  // check for coockies
+
+  // Fetch books from backend
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/books");
+        const data = await res.json();
+        setBooks(data);
+      } catch (error) {
+        console.error("Failed to fetch books:", error);
+      }
+    };
+
+    fetchBooks();
+    checkCookies();
+  }, []);
+
+  // Check for JWT cookie
   const checkCookies = () => {
-    // Check if cookies are set
     const cookies = document.cookie.split("; ");
     const isLoggedInCookie = cookies.find((cookie) =>
       cookie.startsWith("jwt=")
