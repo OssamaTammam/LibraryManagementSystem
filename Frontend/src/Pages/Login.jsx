@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../../api/auth";
+import { signin } from "../../api/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,12 +8,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const signinData = { email, password };
-    const result = await login(signinData);
-    if (result.status === 200) {
-      alert("Login successful");
-      window.location.href = "/Home";
-    } else {
-      alert("Login failed");
+    try {
+      const data = await signin(signinData);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.location.href = "/";
+    } catch (error) {
+      alert("Login failed. Please check your credentials.");
     }
   };
 

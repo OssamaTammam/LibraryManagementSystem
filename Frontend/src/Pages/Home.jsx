@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import imageCover from "../../utils/book.png";
 import backgroundImage from "../../utils/backgroundHome.jpg";
+import { getallBooks } from "../../api/books";
 
 function BookCard({ book }) {
   return (
@@ -9,17 +9,13 @@ function BookCard({ book }) {
       to={`/books/${book.id}`}
       className="bg-white rounded-lg shadow-md overflow-hidden flex max-w-[400px] h-[220px] hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
-      <img
-        src={book.coverUrl || imageCover}
-        alt={book.title ? `${book.title} cover` : "Book cover"}
-        className="w-36 object-cover"
-      />
       <div className="p-4 flex flex-col justify-center">
         <h2 className="text-xl font-semibold">{book.title}</h2>
         <p className="text-gray-600">{book.author}</p>
-        <p className="text-gray-700 mt-2 text-sm line-clamp-3">
-          {book.description}
-        </p>
+        <p className="text-gray-600">ISBN: {book.isbn}</p>
+        <p className="text-gray-600">Borrow Price: {book.borrow_price}$</p>
+        <p className="text-gray-600">Buy Price: {book.buy_price}$</p>
+        <p className="text-gray-600">Quantity: {book.quantity}</p>
       </div>
     </Link>
   );
@@ -33,28 +29,26 @@ export default function Home() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/books");
-        const data = await res.json();
-        setBooks(data);
+        const data = await getallBooks();
+        setBooks(data.books);
       } catch (error) {
         console.error("Failed to fetch books:", error);
       }
     };
-
     fetchBooks();
-    checkCookies();
+    // checkCookies();
   }, []);
 
-  // Check for JWT cookie
-  const checkCookies = () => {
-    const cookies = document.cookie.split("; ");
-    const isLoggedInCookie = cookies.find((cookie) =>
-      cookie.startsWith("jwt=")
-    );
-    if (isLoggedInCookie) {
-      setIsLoggedIn(true);
-    }
-  };
+  // // Check for JWT cookie
+  // const checkCookies = () => {
+  //   const cookies = document.cookie.split("; ");
+  //   const isLoggedInCookie = cookies.find((cookie) =>
+  //     cookie.startsWith("jwt=")
+  //   );
+  //   if (isLoggedInCookie) {
+  //     setIsLoggedIn(true);
+  //   }
+  // };
 
   return (
     <main

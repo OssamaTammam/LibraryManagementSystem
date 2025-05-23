@@ -17,6 +17,7 @@ class Api::V1::AuthController < Api::ApiController
         secure: Rails.env.production?
       }
       render_success({ message: "Sign in successful", user:{
+        id: user.id,
         username: user.username,
         admin: user.admin,
       } },)

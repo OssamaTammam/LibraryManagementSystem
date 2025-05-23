@@ -13,20 +13,22 @@ export default function SignUp() {
       alert("Passwords do not match!");
       return;
     }
+
     const signupData = {
       username,
       email,
       password,
       password_confirmation: confirmPassword,
     };
+
     try {
-      const response = await signup(signupData);
-      console.log(response);
+      const data = await signup(signupData);
+      alert("Signup successful");
     } catch (error) {
-      console.error("Error during signup:", error);
       alert("Signup failed. Please try again.");
     }
-    window.location.href = "/";
+
+    window.location.href = "/login";
   };
 
   return (
