@@ -18,8 +18,25 @@ class Api::V1::UsersController < Api::ApiController
 
   def get_borrowed_books
     authorize @current_user, :get_borrowed_books?
-    books = Book.joins(:transactions).where(transactions: { user_id: @current_user.id, transaction_type: :borrow , return_date: nil })
-    render_success({ books: BookSerializer.render(books) })
+    transactions = Transaction.where(
+      user_id: @current_user.id,
+      transaction_type: :borrow,
+      returned: false
+    ).includes(:book)
+
+    mapped_transactions = transactions.map do |transaction|
+      {
+        transaction_id: transaction.id,
+        borrowed_at: transaction.transaction_date,
+        due_date: transaction.return_date,
+        book: {
+          book_id: transaction.book.id,
+          title: transaction.book.title
+        }
+      }
+    end
+
+    render_success({ transactions: mapped_transactions })
   end
 
   def get_transactions

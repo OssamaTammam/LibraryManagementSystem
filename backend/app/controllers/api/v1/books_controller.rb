@@ -56,10 +56,7 @@ class Api::V1::BooksController < Api::ApiController
     authorize Book, :return?
     book = Book.find(params[:book_id])
     transaction = Transaction.find(params[:transaction_id])
-    if transaction.return_date < Time.current
-      return render_error("Book already returned", :unprocessable_entity)
-    end
-    transaction.update!(return_date: Time.current)
+    transaction.update!(return_date: Time.current, returned: true)
     book.update!(quantity: book.quantity + 1)
     render_success({ transaction: TransactionSerializer.render(transaction) })
   end

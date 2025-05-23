@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_19_181212) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_23_201907) do
   create_table "books", force: :cascade do |t|
     t.string "title", null: false
     t.string "author", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_19_181212) do
     t.integer "transaction_type", null: false
     t.datetime "transaction_date", null: false
     t.datetime "return_date"
+    t.boolean "returned", default: false
   end
 
   create_table "users", force: :cascade do |t|
