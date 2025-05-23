@@ -5,6 +5,8 @@ namespace :v1 do
       get :me
       put :me, action: :update_me
       delete :me, action: :delete_me
+      get "me/borrowed_books", action: :get_borrowed_books
+      get "me/transactions", action: :get_transactions
     end
   end
 end

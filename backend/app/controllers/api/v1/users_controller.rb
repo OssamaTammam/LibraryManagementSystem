@@ -16,6 +16,18 @@ class Api::V1::UsersController < Api::ApiController
     render_success({ message: "User deleted successfully" }, :no_content)
   end
 
+  def get_borrowed_books
+    authorize @current_user, :get_borrowed_books?
+    books = Book.joins(:transactions).where(transactions: { user_id: @current_user.id, transaction_type: :borrow , return_date: nil })
+    render_success({ books: BookSerializer.render(books) })
+  end
+
+  def get_transactions
+    authorize @current_user, :get_transactions?
+    transactions = Transaction.where(user_id: @current_user.id)   
+    render_success({transactions: TransactionSerializer.render(transactions)})
+  end
+
   def index
     authorize User, :index?
     users = list(User)
