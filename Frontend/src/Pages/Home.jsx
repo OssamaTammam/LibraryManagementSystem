@@ -38,17 +38,15 @@ export default function Home() {
     fetchBooks();
     // checkCookies();
   }, []);
-
-  // // Check for JWT cookie
-  // const checkCookies = () => {
-  //   const cookies = document.cookie.split("; ");
-  //   const isLoggedInCookie = cookies.find((cookie) =>
-  //     cookie.startsWith("jwt=")
-  //   );
-  //   if (isLoggedInCookie) {
-  //     setIsLoggedIn(true);
-  //   }
-  // };
+  const checkCookies = () => {
+    const cookies = document.cookie.split("; ");
+    const isLoggedInCookie = cookies.find((cookie) =>
+      cookie.startsWith("jwt=")
+    );
+    if (isLoggedInCookie) {
+      setIsLoggedIn(true);
+    }
+  };
 
   return (
     <main
@@ -63,24 +61,35 @@ export default function Home() {
       <header className="bg-white bg-opacity-80 backdrop-blur-md shadow-md px-6 py-4 rounded-lg mb-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">📚 Library System</h1>
 
-        <div className="flex-1 mx-6 max-w-xs">
-          <input
-            type="text"
-            placeholder="Search books..."
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="space-x-4">
-          <Link to="/" className="text-gray-900 hover:underline font-medium">
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition"
-          >
-            Sign Up
-          </Link>
+        {/* Auth or Profile */}
+        <div className="space-x-4 flex items-center">
+          {isLoggedIn ? (
+            <div className="flex items-center space-x-2">
+              <img
+                src="https://www.svgrepo.com/show/382106/profile-user.svg"
+                alt="Profile"
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="text-gray-900 font-medium">
+                {localStorage.getItem.username}
+              </span>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-gray-900 hover:underline font-medium"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </header>
 
