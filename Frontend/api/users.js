@@ -65,7 +65,7 @@ export const deleteMe = async () => {
 };
 export const getMyTransactions = async () => {
   try {
-    const response = await api.get("me/transactions");
+    const response = await api.get("/users/me/transactions");
     return response.data;
   } catch (error) {
     console.error("Error fetching transactions:", error);
@@ -74,7 +74,7 @@ export const getMyTransactions = async () => {
 };
 export const getMyBorrowedBooks = async () => {
   try {
-    const response = await api.get("me/transactions");
+    const response = await api.get("/users/me/transactions");
     return response.data;
   } catch (error) {
     console.error("Error fetching borrowed books:", error);
